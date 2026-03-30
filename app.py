@@ -2,13 +2,18 @@ import streamlit as st
 import pandas as pd
 from src.data_loader import load_and_clean
 from src.model_trainer import Movie_recommender
-
+import os 
 
 st.set_page_config(page_title="Movie Matcher KNN", layout="wide")
 
 @st.cache_resource 
 def initialize_engine():
-    mat, sparse_mat, df_movies = load_and_clean(r'C:\Users\rohit\OneDrive\Desktop\movie_recommendation\data\ratings.csv', r'C:\Users\rohit\OneDrive\Desktop\movie_recommendation\data\movies.csv')
+    base_path = os.path.dirname(__file__)
+
+    ratings_path = os.path.join(base_path, 'data', 'ratings.csv')
+    movies_path = os.path.join(base_path, 'data', 'movies.csv')
+
+    mat, sparse_mat, df_movies = load_and_clean(ratings_path, movies_path)
     recommender = Movie_recommender()
     recommender.fit(sparse_mat)
     return mat, df_movies, recommender
